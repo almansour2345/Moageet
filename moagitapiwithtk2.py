@@ -21,11 +21,11 @@ g = '%s:%s:%s' %(a[3],a[4],a[5])
 
 #### requesting riyadh prayer times from the link 
 
-r = requests.get('http://muslimsalat.com/riyadh.json')
+#r = requests.get('http://muslimsalat.com/riyadh.json')
 #### uncomment below to get global based on your location
 
 
-#r = requests.get('http://muslimsalat.com/daily.json')
+r = requests.get('http://muslimsalat.com/daily.json')
 
 
 
@@ -84,7 +84,6 @@ fp4=p.find('pm',tisha)
 tl4=p[tisha:fp4]
 
 
- 
  
  
  
