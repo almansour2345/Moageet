@@ -1,0 +1,21 @@
+name: moageet
+version: '1.0.0'
+summary: A simple python script to show Muslims prayer times **powered by MuslimSalat.com**
+description: |
+     easy GUI shows prayer times based on your location 
+     powered by MuslimSalat.com
+grade: stable
+confinement: classic
+
+apps:
+  httpstat:
+    command: moageet
+    plugs: [network]
+parts:
+  httpstat:
+    source: https://github.com/almansour2345/Moageet.git
+    source-tag: v1.0.0
+    plugin: python
+
+    
+confinement: strict
