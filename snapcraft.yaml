@@ -8,11 +8,11 @@ grade: stable
 confinement: classic
 
 apps:
-  httpstat:
+  moageet:
     command: moageet
     plugs: [network]
 parts:
-  httpstat:
+  moageet:
     source: https://github.com/almansour2345/Moageet.git
     source-tag: v1.0.0
     plugin: python
