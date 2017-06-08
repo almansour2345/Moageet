@@ -9,7 +9,7 @@ confinement: strict
 
 apps:
   moageet:
-    command: moageet
+    command: python moageet
     plugs: [network]
 parts:
   moageet:
