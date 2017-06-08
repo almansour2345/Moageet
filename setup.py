@@ -5,11 +5,11 @@ from setuptools import setup, find_packages
 
 setup(
 
-     name='moagit',
+     name='moageet',
 
      version='7.0.0',
 
-     description='Moagit al salah',
+     description='Moageet al salah',
 
 
      author='Mansour A Almansour',
