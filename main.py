@@ -1,158 +1,519 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import Tkinter
-from Tkconstants import *
-import re
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository  import Gtk, Gdk
 
+import re
+import json
 import sys
 import commands
 import time
 import datetime
 import requests
+ 
+from datetime import datetime
 
-# start the tkinter 
-
-tk = Tkinter.Tk()
-
+ 
 #### local time 
-
 a = time.ctime()
-g = '%s:%s:%s' %(a[3],a[4],a[5])
 
+rg = '%s%s' %(a[11],a[12])
+rg2 = '%s%s' %(a[14],a[15])
+g=int(rg)
+g2=int(rg2)
+ 
 #### requesting riyadh prayer times from the link 
 
 #r = requests.get('http://muslimsalat.com/riyadh.json')
 #### uncomment below to get global based on your location
-
-
-r = requests.get('http://muslimsalat.com/daily.json')
-
-
-
+r = requests.get('http://api.aladhan.com/timingsByCity?city=riyadh&country=sa&method=1')
 ### getting the data from into a varibal 
-
 p= r.text
  
-##### extracting the data 
-
-tfajr=p.find('fajr')
-fp0=p.find('am',tfajr)
-jl0=p[tfajr:fp0]
-tj0=jl0[0:4]
-tj1=jl0[7:11]
-tl0=tj0 + '\t-_' + tj1+'_-'
+#xx=json.load(p)
  
-#tl0=p[tfajr:fp0]
-# print tl0
+##print p
+ 
 
-tduher=p.find('dhuhr')
-fp1=p.find('pm',tduher)
+tt=p.find('timings')
+tt2=p.find('}',tt)
+tr=p[tt:tt2]
 
-tl1=p[tduher:fp1]
-td0=tl1[0:5]
-td1=tl1[7:14]
-tl1=td0 + '\t-_' + td1+'_-'
+##print tr
 
+tf=tr.find('Fajr')
+ttf=tr.find(',',tf)
+trf=tr[tf:ttf]
+hrf=trf[7:9]
+mrf=trf[10:12]
+#print hrf
+#print mrf
+#print trf
 
-# print tl1
+td=tr.find('Dhuhr')
+ttd=tr.find(',',td)
+trd=tr[td:ttd]
+hrd=trd[8:10]
+mrd=trd[11:13]
+#print trd
+#print hrd
+#print mrd
 
-
-
-tasr=p.find('asr')
-fp2=p.find('pm',tasr)
-
-tl2=p[tasr:fp2]
-tr0=tl2[0:4]
-tr1=tl2[6:11]
-tl2=tr0 + '\t-_' + tr1+'_-'
-
-
-# print tl2
-
-
-
-tmaghrib=p.find('maghrib')
-fp3=p.find('pm',tmaghrib)
-
-tl3=p[tmaghrib:fp3]
-# print tl3
-
-
-tisha=p.find('isha')
-fp4=p.find('pm',tisha)
-
-tl4=p[tisha:fp4]
+ts=tr.find('Asr')
+tts=tr.find(',',ts)
+trs=tr[ts:tts]
+had=trs[6:8]
+mad=trs[9:11]
+#print trs
+#print had
+#print mad
 
 
+tm=tr.find('Maghrib')
+ttm=tr.find(',',tm)
+trm=tr[tm:ttm]
+hmd=trm[10:12]
+mmd=trm[13:15]
+#print trm
+#print hmd
+#print mmd
+
+
+ti=tr.find('Isha')
+tti=tr.find(',',ti)
+tri=tr[ti:tti]
+hid=tri[7:9]
+mid=tri[10:12]
+
+#print tri
+#print hid
+#print mid
+
+tn=tr.find('Sunrise')
+ttn=tr.find(',',tn)
+trn=tr[tn:ttn]
+hrn=trn[10:12]
+mrn=trn[13:15]
+#print trn
+#print hrn
+#print mrn
+te=tr.find('Sunset')
+tte=tr.find(',',te)
+tre=tr[te:tte]
+hren=tre[9:11]
+mren=tre[12:14]
+#print tre
+#print hren
+#print mren
+ 
+
+
+fajrh=int(hrf)
+fajrm=int(mrf)
+duhrh=int(hrd)
+duhrm=int(mrd)
+asrh=int(had)
+asrm=int(mad)
+maghrebh=int(hmd)
+maghrebm=int(mmd)
+ishah=int(hid)
+isham=int(mid)
+sunriseh=int(hrn)
+sunrisem=int(mrn)
+sunseth=int(hren)
+sunsetm=int(mren)
  
  
+gh=int(g)	
  
- 
-ms = re.search('(\b)?(\d+):(\d+)',tl0)
-ms1 = re.search('(\b)?(\d+):(\d+)',tl1)
-ms2 = re.search('(\b)?(\d+):(\d+)',tl2)
-ms3 = re.search('(\b)?(\d+):(\d+)',tl3)
-ms4 = re.search('(\b)?(\d+):(\d+)',tl4)
+gm=int(g2)
+cx=0	
 
-dr = ms.group()
-dr1 = ms1.group()
-dr2 = ms2.group()
-dr3 = ms3.group()
-dr4 = ms4.group()
+	 
+def grp():
+	vv=gh
+	gm2=g2
+	global cx
 
-fdr="Fajer Prayer (" + dr + ")"
-dudr="Duhur Prayer (" + dr1 + ")"
-asrdr="Asur Prayer (" + dr2 + ")"
-mgdr="Magrib Prayer (" + dr3 + ")"
-esdr="Esha Prayer (" + dr4 + ")"
-#### starting the GUI "user interface" and inserting the times 
-### a def to capture keyboard events 
+	#fajr
+	if vv >= ishah and vv <= 24 or vv >=0 and vv <= fajrh:  ## if time "vv" more or equal  to 19 8 isha time or less then  12 midnight or more then 0 12 midnight and less or equal fajer 4 am 
 
-
-def key(event):
-	frame.focus_set()
-	tk.destroy() , repr(event.char)
- 
-tk.title("Moaget Al-Salat")
-tk.geometry("450x500")		
-
-## here execute the key event and exit the app
+		if vv == ishah and gm2 <= isham: ## if its equal 17 or 8 pm and minuets equal less then 47 ! then isha
+			cx=5
+		elif vv == ishah and gm2 <= isham:
+			cx=5
+		elif vv == ishah and gm2 > isham:  ## if its equal 17 or 8 pm and minuets  more  then 47 ! then fajer
+			cx=1
+		elif vv == fajrh and gm2 <= fajrm: ## if vv equal 4 and minuets less then 27 ! then fajer
+			cx=1
+		else:
+			cx=1
+	#duhr		
+	elif vv > fajrh and vv <= duhrh: ## if more then 4  and less or equal then 11 !
+		if vv == duhrh and gm2 <= duhrm: ## if vv equal 11 and minutes are less or equal 45 then duhr
+			cx=2
+		elif vv < duhrh: ## if its less then 11 ! duhr 
+			cx=2
+		else:
+			cx=3
 	
-tk.bind("<Key>", key)
+	#asr
+	elif vv > duhrh and vv <= asrh: ## if vv more then 11 and less or equal  15
+		if vv == asrh and gm2 <=asrm: ## if vv eqaul 15 and minuets equal or less then 11 ! then asr
+			cx=3
+		elif vv < asrh: ## if vv less then 15
+			cx=3
+		else:
+			cx=4
+			
+	elif vv > asrh and vv <= maghrebh: ## if vv more then 15 and vv equal or less then 17 
+		if vv == maghrebh and gm2 <= maghrebm: ## if vv equal 17 and minuets less or equal 47! then maghreb
+			cx = 4
+		elif vv < maghrebh: ## if vv less then 17 ! then maghreeb
+			cx=4
+		else: ## else isha 
+			cx=5
+			
+	elif vv > maghrebh and vv <=ishah: ## if vv more then 17 and vv equal or less  19 
+		if vv == ishah and gm2 <= isham: ## if vv equal 19 and minuets less or equal 02 ! then isha
+			cx=5
+		elif vv < ishah: ## if vv less then 19 ! then isha
+			cx=5
+		else: ## else fajer = not more 
+			cx=1
+	return cx
 
 
-frame = Tkinter.Frame(tk, relief=RIDGE, borderwidth=5,width=600, height=1000)#, bg="gray12"
+tt = grp()
+#print tt 
+if tt ==1:
+	pn="Fajr"
+	
+elif tt==2:
+	pn="Duhr"
+elif tt==3:
+	pn="Asur"
+elif tt==4:
+	pn="Magreeb"
+elif tt==5:
+	pn="Esha"
+
+
+had=int(had)-12
+hmd=int(hmd)-12
+hid=int(hid)-12
+hren=int(hren)-12
+
+
+def tooa():
+	arr = time.ctime()
+
+	rgrr = '%s%s' %(arr[11],arr[12])
+	rg2rr = '%s%s' %(arr[14],arr[15])
+	
+	#rgrr="19"
+	#rg2rr="11"
+	xr=arr[11]
+
+	if tt>2 :
+		rgrr=int(rgrr)-12
+
+	#print rgrr
+	
+	g=str(rgrr) + ":" + rg2rr + ":" + "00"
+	gfT=hrf + ":" + mrf + ":"	+ "00"
+	gdT=hrd + ":" + mrd + ":"	+ "00"
+	gaT=str(had) + ":" + mad + ":"	+ "00"
+	gmT=str(hmd) + ":" + mmd + ":"	+ "00"
+	giT=str(hid) + ":" + mid + ":"	+ "00"
+	
+	fmt = '%H:%M:%S'
+		
+	if tt==1:
+		pn="Fajr"
+		d1 = datetime.strptime(g, fmt)
+		d2 = datetime.strptime(gfT, fmt)
+		diff = d2-d1
+		qq=str(diff)
+		 
+		css="Prayer Fajr in: %s " % qq
+		 
+
+
+	elif tt==2:
+		pn="Duhr"
+		d1 = datetime.strptime(g, fmt)
+		d2 = datetime.strptime(gdT, fmt)
+		diff = d2-d1
+		qq=str(diff)
+		 
+		css="Prayer Duhr in: %s " % qq
+		 
+
+	elif tt==3:
+		pn="Asr"
+		d1 = datetime.strptime(g, fmt)
+		d2 = datetime.strptime(gaT, fmt)
+		diff = d2-d1
+		qq=str(diff)
+		 
+		css="Prayer Asr in: %s " % qq
+		 
+
+	elif tt==4:
+		pn="Maghreeb"
+		d1 = datetime.strptime(g, fmt)
+		d2 = datetime.strptime(gmT, fmt)
+		diff = d2-d1
+		qq=str(diff)
+		 
+		css="Prayer Maghreeb in: %s " % qq
+		 
+
+	elif tt==5:
+		pn="Isha"
+		
+		d1 = datetime.strptime(g, fmt)
+		d2 = datetime.strptime(giT, fmt)
+		diff = d2-d1
+		qq=str(diff)
+		 
+		css="Prayer Isha in: %s " % qq
+ 
+
+	return css
+			
+cssd=tooa()
+faj=str(hrf)+":" + str(mrf)
+duh=str(hrd)+":" + str(mrd)
+asrr=str(had)+":" + str(mad)
+mage=str(hmd)+":" + str(mmd)
+ish=str(hid)+":" + str(mid)
+ris=str(hrn)+":" + str(mrn)
+seet=str(hren)+":" + str(mren)
+d22=str(rg)+":"+str(rg2)
+class LabelWindow(Gtk.Window):
+	
+
+	def __init__(self):
+		Gtk.Window.__init__(self, title="Prayer Times in Riyadh")
+		self.set_border_width(11)
+		hbox = Gtk.Box(spacing=12)
+		hbox.set_homogeneous(True)
+		self.add(hbox)
+
+ 
+
+		vbox_left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=11)
+		vbox_left.set_homogeneous(False)
+		vbox_right = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=11)
+		vbox_right.set_homogeneous(False)
+		vbox_top = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=15)
+		vbox_top.set_homogeneous(False)
+		vbox_buttom = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+		vbox_buttom.set_homogeneous(False)
+		hbox.pack_start(vbox_left, True, True, 0)
+		hbox.pack_start(vbox_right, True, True, 0)
+
+		
+		label = Gtk.Label("time now:") 
+		label.set_justify(Gtk.Justification.LEFT)
+		vbox_left.pack_start(label, True, True, 1)
+
+
+		label = Gtk.Label("Fajer") 
+		label.set_name('L1')
+		label.set_justify(Gtk.Justification.LEFT)
+		vbox_left.pack_start(label, True, True, 0)
+		
+		label = Gtk.Label("Duhr")
+		label.set_justify(Gtk.Justification.RIGHT)
+		vbox_left.pack_start(label, True, True, 0)
+		
+		label = Gtk.Label("Maghrib")
+		label.set_line_wrap(True)
+		vbox_left.pack_start(label, True, True, 0)
+		
+		label = Gtk.Label("Isha")
+		label.set_line_wrap(True)
+		label.set_justify(Gtk.Justification.FILL)
+		vbox_left.pack_start(label, True, True, 0)
+		
+
+
+		label = Gtk.Label("UpComing Prayer")
+		label.set_line_wrap(True)
+		label.set_justify(Gtk.Justification.FILL)
+		vbox_left.pack_start(label, True, True, 0)
+
+
+		label = Gtk.Label("sunrise")
+		label.set_line_wrap(True)
+		label.set_justify(Gtk.Justification.FILL)
+		vbox_left.pack_start(label, True, True, 0)
+
+		label = Gtk.Label("sunset")
+		label.set_line_wrap(True)
+		label.set_justify(Gtk.Justification.FILL)
+		vbox_left.pack_start(label, True, True, 0)
+		
+############## start the lef vbox
+
+		label = Gtk.Label(d22) 
+		label.set_justify(Gtk.Justification.LEFT)
+		vbox_right.pack_start(label, True, True, 0)
+
+
+		label = Gtk.Label(faj)
+		label.set_line_wrap(True)
+		label.set_justify(Gtk.Justification.FILL)
+		vbox_right.pack_start(label, True, True, 0)
+
+
+		label = Gtk.Label(duh)
+		label.set_line_wrap(True)
+		label.set_justify(Gtk.Justification.FILL)
+		vbox_right.pack_start(label, True, True, 0)
 
 
 
-frame.config(bg="gray9")
-
-#frame.bind("<Button-1>", callback)
-frame.pack(fill=BOTH,expand=3)
-
-frame.pack_propagate(3)
+		label = Gtk.Label(asrr)
+		label.set_line_wrap(True)
+		label.set_justify(Gtk.Justification.FILL)
+		vbox_right.pack_start(label, True, True, 0)
 
 
 
-label = Tkinter.Label(frame, text="Time Now", font=("Helvetica", 24),bg="gray38")
-label.pack(side=TOP,fill=X, expand=3,padx=5, pady=5)
-label7= Tkinter.Label(frame, text=a , font=("Helvetica", 21),bg="gray35")
-label7.pack(side=TOP,fill=X, expand=5,padx=5, pady=5)
-label1 = Tkinter.Label(frame, text="Prayer\'s Times ", font=("Helvetica", 21),bg="gray78")
-label1.pack(side=TOP,fill=X, expand=3,padx=5, pady=5)
-label2= Tkinter.Label(frame, text=fdr, font=("Helvetica", 21),bg="gray59")
-label2.pack(side=TOP,fill=X, expand=5,padx=5, pady=5)
-label3= Tkinter.Label(frame, text=dudr, font=("Helvetica", 21),bg="gray45")
-label3.pack(side=TOP,fill=X, expand=5,padx=5, pady=5)
-label4= Tkinter.Label(frame, text=asrdr, font=("Helvetica", 21),bg="gray43")
-label4.pack(side=TOP,fill=X, expand=5,padx=5, pady=5)
-label5= Tkinter.Label(frame, text=mgdr, font=("Helvetica", 21),bg="gray39")
-label5.pack(side=TOP,fill=X, expand=5,padx=5, pady=5)
-label6= Tkinter.Label(frame, text=esdr, font=("Helvetica", 21),bg="gray35")
-label6.pack(side=TOP,fill=X, expand=5,padx=5, pady=5)
-button = Tkinter.Button(frame,text="Exit",command=tk.destroy)
-#button.bind("<Key>", key)
 
-button.pack(side=RIGHT)
+		label = Gtk.Label(mage)
+		label.set_line_wrap(True)
+		label.set_justify(Gtk.Justification.FILL)
+		vbox_right.pack_start(label, True, True, 0)
 
-tk.mainloop()
+
+
+		label = Gtk.Label(ish)
+		label.set_line_wrap(True)
+		label.set_justify(Gtk.Justification.FILL)
+		vbox_right.pack_start(label, True, True, 0)
+
+
+
+		label = Gtk.Label(cssd)
+		label.set_line_wrap(True)
+		label.set_justify(Gtk.Justification.FILL)
+		vbox_right.pack_start(label, True, True, 0)
+
+
+
+		label = Gtk.Label(ris)
+		label.set_line_wrap(True)
+		label.set_justify(Gtk.Justification.FILL)
+		vbox_right.pack_start(label, True, True, 0)
+
+
+
+
+
+		label = Gtk.Label(seet)
+		label.set_line_wrap(True)
+		label.set_justify(Gtk.Justification.FILL)
+		vbox_right.pack_start(label, True, True, 0)
+
+
+
+		button = Gtk.Button("Close")
+		button.connect("clicked", self.onButtonPressed)
+		hbox.pack_end(button, True, True, 0)
+		 
+
+	def onButtonPressed(self, button):
+		Gtk.main_quit()
+
+
+def main(argv):
+
+    def gtk_style():
+        css = b"""
+
+GtkWindow {
+    background-image: url("361766.jpg")  ;
+
+	background-repeat: no-repeat;
+}
+ 
+ 
+
+
+L1 {
+    color: blue;
+    background-color: #BC0909;
+    border-style: outset;
+    border-color: #333;
+    padding: 8px 4px;
+	border-radius: 13px;
+	font-size:21px;	
+	transition: 0.3s; 
+	border-right: none;
+}
+ 
+.label {
+	box-shadow: 3px 5px 5px #888888;
+    color: white;
+    background-color: #525252;
+    border-style: outset;
+    border-color: #333;
+    padding: 18px 18px;
+	border-radius: 13px;
+	font-size:14px;	
+	transition: 0.3s; 
+	border-right: none;
+}
+.button button {
+    color: green;
+    background-color: shade (@bg_color, 1.44);
+    border-style: inset;
+    border-width: 2px 0 2px 2px;
+    border-color: #333;
+    padding: 12px 4px;
+	border-radius: 32px;
+}
+.button:first-child {
+    border-radius: 13px 0 0 5px;
+}
+.button:last-child {
+    border-radius: 10px 5px 5px 0;
+    border-width: 2px;
+}
+.button:hover {
+    padding: 12px 48px;
+    background-color: shade (@bg_color, 1.06);
+}
+.button *:hover {
+    color: white;
+}
+.button:hover:active,
+.button:active {
+      background-color: shade (@bg_color, 0.85);
+}
+        """
+        style_provider = Gtk.CssProvider()
+        style_provider.load_from_data(css)
+
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(),
+            style_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+
+    gtk_style()
+    win = LabelWindow()
+    win.connect("delete-event", Gtk.main_quit)
+    win.show_all()
+    Gtk.main()
+
+if __name__ == "__main__":
+	main(sys.argv)
+
+
