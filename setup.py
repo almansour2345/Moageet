@@ -7,7 +7,7 @@ setup(
 
      name='moageet',
 
-     version='7.0.0',
+     version='7.2.0',
 
      description='Moageet al salah',
 
@@ -20,7 +20,7 @@ setup(
 
      packages=find_packages(exclude=['']),
 
-     install_requires=['requests'],
+     install_requires=['requests','time','gi','json','sys','gi.repository'],
  
 #     entry_points={
 #        'gui_scripts': [
