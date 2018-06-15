@@ -6,3 +6,4 @@ A simple code to grab times of prayers from API provided on the internet and dis
 ** Tested on linux and windows
 ### Note: you must be connected to internet in order for the program to run 
 #### powered by aladhan.com
+/play heygirl
