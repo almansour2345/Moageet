@@ -292,6 +292,10 @@ mage=str(hmd)+":" + str(mmd)
 ish=str(hid)+":" + str(mid)
 ris=str(hrn)+":" + str(mrn)
 seet=str(hren)+":" + str(mren)
+grgr=int(rg)
+if grgr>12:
+	rg=grgr-12
+	
 d22=str(rg)+":"+str(rg2)
 class LabelWindow(Gtk.Window):
 	
@@ -328,6 +332,10 @@ class LabelWindow(Gtk.Window):
 		vbox_left.pack_start(label, True, True, 0)
 		
 		label = Gtk.Label("Duhr")
+		label.set_justify(Gtk.Justification.RIGHT)
+		vbox_left.pack_start(label, True, True, 0)
+		
+		label = Gtk.Label("Asur")
 		label.set_justify(Gtk.Justification.RIGHT)
 		vbox_left.pack_start(label, True, True, 0)
 		
@@ -438,9 +446,7 @@ def main(argv):
         css = b"""
 
 GtkWindow {
-    background-image: url("361766.jpg")  ;
 
-	background-repeat: no-repeat;
 }
  
  
