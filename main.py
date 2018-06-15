@@ -368,7 +368,7 @@ class LabelWindow(Gtk.Window):
 		
 ############## start the lef vbox
 
-		label = Gtk.Label(d22) 
+		label = Gtk.Label(a) 
 		label.set_justify(Gtk.Justification.LEFT)
 		vbox_right.pack_start(label, True, True, 0)
 
