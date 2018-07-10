@@ -19,9 +19,8 @@ setup(
      license='MIT',
 
      packages=find_packages(exclude=['']),
-
-     install_requires=['requests','time','gi','json','sys','gi.repository'],
- 
+     scripts=['main.py'],
+     install_requires=['requests>=2.18.4','pygobject>=3.26.1'],
 #     entry_points={
 #        'gui_scripts': [
 #
