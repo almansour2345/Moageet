@@ -48,7 +48,7 @@ artifacts:
   
 image:
   - Visual Studio 2015
-  - Ubuntu
+
 
 #on_success:
 #  You can use this step to upload your artifacts to a public website.
