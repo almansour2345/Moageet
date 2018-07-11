@@ -1,5 +1,7 @@
 environment:
-
+  
+image:
+  - Visual Studio 2015
   matrix:
 
     # For Python versions available on Appveyor, see
@@ -23,7 +25,7 @@ install:
   # We need wheel installed to build wheels
   - "%PYTHON%\\python.exe -m pip install wheel"
 
-build: off
+#build: off
 
 test_script:
   # Put your test command here.
@@ -33,21 +35,34 @@ test_script:
   # Note that you must use the environment variable %PYTHON% to refer to
   # the interpreter you're using - Appveyor does not do anything special
   # to put the Python version you want to use on PATH.
-  #- "build.cmd %PYTHON%\\python.exe setup.py test"
+  #- cmd: %PYTHON%\\python.exe setup.py test
 
 after_test:
   # This step builds your wheels.
   # Again, you only need build.cmd if you're building C extensions for
   # 64-bit Python 3.3/3.4. And you need to use %PYTHON% to get the correct
   # interpreter
-  #- "build.cmd %PYTHON%\\python.exe setup.py bdist_wheel"
+    - cmd:  %PYTHON%\\python.exe setup.py bdist_wheel
+  
+  
+deploy:
+  release: myproduct-v$(appveyor_build_version)
+  description: 'application for muslims prayers time '
+  provider: GitHub
+  auth_token:
+    secure: Nl2qVQDJ4z5jIWVZeg9BAXQ723AS6NYs9MSf+4tvG/mtZS+LlrGTGu1ECy4wSY/q
+  artifact: /.*\.nupkg/            # upload all NuGet packages to release assets
+  draft: false
+  prerelease: false
+  on:
+    branch: master                 # release from master branch only
+    appveyor_repo_tag: true 
 
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
   - path: dist\*
   
-image:
-  - Visual Studio 2015
+
 
 
 #on_success:
