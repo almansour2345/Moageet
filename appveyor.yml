@@ -44,7 +44,7 @@ after_test:
   # interpreter
   #-cmd:  %PYTHON%\\python.exe setup.py bdist_wheel
 image:
-  - Script
+    - Visual Studio 2017
 
   
 deploy:
