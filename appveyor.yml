@@ -1,8 +1,6 @@
 environment:
 
 
-image:
-  - Visual Studio 2015
 
 matrix:
 
@@ -45,7 +43,9 @@ after_test:
   # 64-bit Python 3.3/3.4. And you need to use %PYTHON% to get the correct
   # interpreter
   #-cmd:  %PYTHON%\\python.exe setup.py bdist_wheel
-  
+image:
+  - Visual Studio 2015
+
   
 deploy:
   release: myproduct-v$(appveyor_build_version)
